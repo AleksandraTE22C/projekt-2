@@ -35,25 +35,26 @@ public class bokningssystem{
         Scanner tb = new Scanner (System.in);
         System.out.println("Ange ett platsnummer (1-20):");
         int platsnummer = tb.nextInt();
+        if(platsnummer < 1 || platsnummer > antal_platser){ //Skriv ut "ogiltigt platsnummer" om talet är utanför sträckan 1-20
+            System.out.println("Ogiltig platsnummer");
+            return;
+        }
 
         if(bokadePlatser[platsnummer - 1] == 0){ //Kontrollera att platsen är ledig
             System.out.println("Ange ditt födelsedatum (YYYYMMDD):");
             String födelsedatum = tb.next();
 
             if (födelsedatum.length() != 8 || !födelsedatum.matches("[0-9]+")) { //Kollar om födelsedatumet inte är exakt 8 tecken eller innehåller tecken som inte är siffror
+                while(true){
                 System.out.println("Ogiltigt födelsedatum");
-                return;
-            }
-
+                System.out.println();
+                }
+            } else{
             bokadePlatser[platsnummer - 1] = 1; //Markera platsen som bokad
             System.out.println("Plats " +platsnummer+ " är bokad för " +födelsedatum);
-        } else{
-            System.out.println("Platsen är redan bokad"); //Skriv ut "platsen är redan bokad" om värdet i arrayen är 1.
-        }
-
-        if(platsnummer < 1 || platsnummer > antal_platser){ //Skriv ut "ogiltigt platsnummer" om talet är utanför sträckan 1-20
-            System.out.println("Ogiltig platsnummer");
-            return;
+            }
+        }else{
+        System.out.println("Platsen är redan bokad"); //Skriv ut "platsen är redan bokad" om värdet i arrayen är 1.
         }
     }
 
