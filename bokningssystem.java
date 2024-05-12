@@ -5,6 +5,7 @@ public class bokningssystem{
     private static final double prisB = 149.90;
     private static double vinst = 0;
     private static int[] bokadePlatser = new int[antal_platser];
+    private static String[] persnr = new String[antal_platser];
 
     public static void main(String[] args) throws InterruptedException {
         Scanner tb = new Scanner (System.in);
@@ -13,7 +14,7 @@ public class bokningssystem{
             System.out.println("1. Boka plats");
             System.out.println("2. Visa lediga platser");
             System.out.println("3. Visa vinsten av sålda biljetter");
-            System.out.println("4.");
+            System.out.println("4. Sök på bokad plats med persnr");
             System.out.println("5. Avsluta");
             int val= tb.nextInt();
             if(val == 1){
@@ -26,7 +27,7 @@ public class bokningssystem{
                 vinsten();
             }
             else if(val == 4){
-
+                sokPlats();
             }
             else if(val == 5){
                 System.out.println("Tack för besöket!");
@@ -81,6 +82,7 @@ public class bokningssystem{
             }
 
             bokadePlatser[platsnummer - 1] = 1; //Markera platsen som bokad
+            persnr[platsnummer - 1] = födelsedatum;
             if (biljettTyp == 1) {
                 vinst += prisV;
                 laddar();
@@ -94,6 +96,20 @@ public class bokningssystem{
         } else {
             System.out.println("Platsen är redan bokad"); //Skriv ut "platsen är redan bokad" om värdet i arrayen är 1.
         }
+    }
+
+    private static void sokPlats(){
+        Scanner tb = new Scanner(System.in);
+        System.out.println("Ange ditt födelsedatum (YYYYMMDD):");
+        String födelsedatum = tb.next();
+
+        for(int i = 0; i < antal_platser; i++){
+            if(bokadePlatser[i] == 1 && födelsedatum.equals(persnr[i])){
+                System.out.println("Plats "+(i+1)+" är bokad för "+födelsedatum);
+                return;
+            }
+        }
+        System.out.println("Ingen plats bokad med det angivna födelsedatumet");
     }
 
     private static int visaPlatser() throws InterruptedException { //Metod för att visa lediga platser
