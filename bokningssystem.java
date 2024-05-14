@@ -13,6 +13,7 @@ public class bokningssystem {
         Scanner tb = new Scanner(System.in);
 
         while (true) {
+            laddar();
             System.out.println("1. Boka plats");
             System.out.println("2. Visa lediga platser");
             System.out.println("3. Visa vinsten av sålda biljetter");
@@ -32,7 +33,8 @@ public class bokningssystem {
             } else if (val == 5) {
                 taBort();
             } else if (val == 6) {
-                skrivUtBokningar();
+                laddar();
+                visaBokningar();
             } else if (val == 7) {
                 System.out.println("Tack för besöket!");
                 break;
@@ -129,12 +131,10 @@ public class bokningssystem {
                 persnr[platsnummer - 1] = födelsedatum;
                 if (biljettTyp == 1) {
                     vinst += prisV;
-                    laddar();
                     System.out.println("Plats " + platsnummer + " är bokad för en vuxen för " + angeNamn + ", " + födelsedatum +".");
                     System.out.println();
                 } else {
                     vinst += prisB;
-                    laddar();
                     System.out.println("Plats " + platsnummer + " är bokad för ett barn för " + angeNamn + ", " + födelsedatum +".");
                     System.out.println();
                 }
@@ -159,8 +159,10 @@ public class bokningssystem {
                 if (bokadePlatser[i] == 1 && input.equals(persnr[i])) {
                     laddar();
                     bokadePlatser[i] = 0;
+                    namn[i] = null;
+                    persnr[i] = null;
                     System.out.println("Plats "+ (i+1) +" är avbokad.");
-                    
+                    return;
                 }
             }
             System.out.println("Ingen plats är bokad med det angivna födelsedatumet.");
@@ -176,8 +178,17 @@ public class bokningssystem {
             }
     }
 
-    private static void skrivUtBokningar() {
-        Scanner tb = new Scanner(System.in);
+    private static void visaBokningar() throws InterruptedException {
+        boolean finns = false;
+        for (int i = 0; i < antal_platser; i++) {
+            if (bokadePlatser[i] == 1) {
+                finns = true;
+                System.out.println(namn[i] + " " + persnr[i] + " " + "Plats " + (i+1));
+            }
+        }
+        if (!finns) {
+            System.out.println("Inga bokningar än.");
+        }
     }
 
     private static void sokPlats() throws InterruptedException {
