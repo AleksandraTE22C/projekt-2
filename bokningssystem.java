@@ -149,12 +149,35 @@ public class bokningssystem {
         }
     }
 
-    private static void taBort() {
+    private static void taBort() throws InterruptedException {
+        Scanner tb = new Scanner(System.in);
+        System.out.println("Ange namn eller födelsedatum (YYYYMMDD):");
+        String input = tb.next();
 
+        if(input.matches("[0-9]+")){
+            for (int i = 0; i < antal_platser; i++) {
+                if (bokadePlatser[i] == 1 && input.equals(persnr[i])) {
+                    laddar();
+                    bokadePlatser[i] = 0;
+                    System.out.println("Plats "+ (i+1) +" är avbokad.");
+                    
+                }
+            }
+            System.out.println("Ingen plats är bokad med det angivna födelsedatumet.");
+            } else{
+                for (int i = 0; i < antal_platser; i++) {
+                    if (bokadePlatser[i] == 1 && input.equals(namn[i])) {
+                        laddar();
+                        bokadePlatser[i] = 0;
+                        System.out.println("Plats "+ (i+1) +" är avbokad.");
+                    }
+                }
+                System.out.println("Ingen plats är bokad med det angivna namnet.");
+            }
     }
 
     private static void skrivUtBokningar() {
-
+        Scanner tb = new Scanner(System.in);
     }
 
     private static void sokPlats() throws InterruptedException {
