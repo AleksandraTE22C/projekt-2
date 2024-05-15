@@ -27,6 +27,7 @@ public class bokningssystem {
             } else if (val == 2) {
                 visaPlatser();
             } else if (val == 3) {
+                laddar();
                 double vinst = vinsten(0);
                 System.out.println("Vinsten är: " + vinst + " kr");
             } else if (val == 4) {
@@ -133,10 +134,10 @@ public class bokningssystem {
                 persnr[platsnummer - 1] = födelsedatum;
                 biljettyp[platsnummer - 1] = biljett;
                 if (biljett.equals("1")) { 
-                    System.out.println("En vuxenbiljett är bokad för plats" + platsnummer + " för " + angeNamn);
+                    System.out.println("En vuxenbiljett för plats " +platsnummer+ " är bokad för "+angeNamn);
                     System.out.println();
                 } else {
-                    System.out.println("En barnbiljett är bokad för plats" + platsnummer + " för " + angeNamn);
+                    System.out.println("En vuxenbiljett för plats " +platsnummer+ " är bokad för "+angeNamn);
                     System.out.println();
                 }
             } else {
