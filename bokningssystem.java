@@ -4,10 +4,10 @@ public class bokningssystem {
     private static final int antal_platser = 20;
     private static final double prisV = 299.90;
     private static final double prisB = 149.90;
-    private static double vinst = 0;
     private static int[] bokadePlatser = new int[antal_platser];
     private static String[] persnr = new String[antal_platser];
     private static String[] namn = new String[antal_platser];
+    private static String[] biljettyp = new String[antal_platser];
 
     public static void main(String[] args) throws InterruptedException {
         Scanner tb = new Scanner(System.in);
@@ -27,7 +27,8 @@ public class bokningssystem {
             } else if (val == 2) {
                 visaPlatser();
             } else if (val == 3) {
-                vinsten();
+                double vinst = vinsten(0);
+                System.out.println("Vinsten är: " + vinst + " kr");
             } else if (val == 4) {
                 sokPlats();
             } else if (val == 5) {
@@ -71,9 +72,9 @@ public class bokningssystem {
         System.out.println("Välj typ av biljett:");
         System.out.println("1. Vuxenbiljett (299.90 kr)");
         System.out.println("2. Barnbiljett (149.90 kr)");
-        int biljettTyp = tb.nextInt();
+        String biljett = tb.next();
 
-        if (biljettTyp == 1 || biljettTyp == 2) {
+        if (biljett.equals("1")|| biljett.equals("2")) {
             laddar();
             System.out.println("----------------------------------------------\r\n" +
                     "|   1    |   2    |        |   3    |   4    |\r\n" +
@@ -130,15 +131,12 @@ public class bokningssystem {
                 bokadePlatser[platsnummer - 1] = 1; // Markera platsen som bokad
                 namn[platsnummer - 1] = angeNamn;
                 persnr[platsnummer - 1] = födelsedatum;
-                if (biljettTyp == 1) {
-                    vinst += prisV;
-                    System.out.println("Plats " + platsnummer + " är bokad för en vuxen för " + angeNamn + ", "
-                            + födelsedatum + ".");
+                biljettyp[platsnummer - 1] = biljett;
+                if (biljett.equals("1")) { 
+                    System.out.println("En vuxenbiljett är bokad för plats" + platsnummer + " för " + angeNamn);
                     System.out.println();
                 } else {
-                    vinst += prisB;
-                    System.out.println("Plats " + platsnummer + " är bokad för ett barn för " + angeNamn + ", "
-                            + födelsedatum + ".");
+                    System.out.println("En barnbiljett är bokad för plats" + platsnummer + " för " + angeNamn);
                     System.out.println();
                 }
             } else {
@@ -164,6 +162,7 @@ public class bokningssystem {
                     bokadePlatser[i] = 0;
                     namn[i] = null;
                     persnr[i] = null;
+                    biljettyp[i] = null;
                     System.out.println("Plats " + (i + 1) + " är avbokad.");
                     return;
                 }
@@ -174,6 +173,9 @@ public class bokningssystem {
                 if (bokadePlatser[i] == 1 && input.equals(namn[i])) {
                     laddar();
                     bokadePlatser[i] = 0;
+                    namn[i] = null;
+                    persnr[i] = null;
+                    biljettyp[i] = null;
                     System.out.println("Plats " + (i + 1) + " är avbokad.");
                 }
             }
@@ -184,8 +186,7 @@ public class bokningssystem {
     private static void visaBokningar() throws InterruptedException {
         boolean finns = false;
 
-        int[] sortArray = new int[antal_platser]; // Skapa en temporär array för att hålla index 0 - antal_platser-1 och
-                                                  // för att hålla de andra arrayerna intakta
+        int[] sortArray = new int[antal_platser]; // Skapa en temporär array för att hålla index 0 - antal_platser-1 och för att hålla de andra arrayerna intakta.
         for (int i = 0; i < antal_platser; i++) {
             sortArray[i] = i;
         }
@@ -197,13 +198,10 @@ public class bokningssystem {
             for (int j = 0; j < antal_platser - i - 1; j++) {
                 // Kontrollera om båda platserna är bokade innan jämförelse
                 if (bokadePlatser[sortArray[j]] == 1 && bokadePlatser[sortArray[j + 1]] == 1) {
-                    // Konvertera personnumren till numerisk typ för korrekt jämförelse (persnr
-                    // sparas som string i bokaPlats metoden eftersom det inte gick att kolla
-                    // längden av numret annars)
+                    // Konvertera personnumren till numerisk typ för korrekt jämförelse (persnr sparas som string i bokaPlats metoden eftersom det inte gick att kolla längden av numret annars)
                     long nummer1 = Long.parseLong(persnr[sortArray[j]]);
                     long nummer2 = Long.parseLong(persnr[sortArray[j + 1]]);
-                    // Jämför personnumren och byt plats om det första är större än det andra, eller
-                    // om det första är lika och index för det andra är mindre
+                    // Jämför personnumren och byt plats om det första är större än det andra, eller om det första är lika och index för det andra är mindre
                     if (nummer1 > nummer2 || (nummer1 == nummer2 && sortArray[j] < sortArray[j + 1])) {
                         int tempIndex = sortArray[j]; // Byt plats på index i sortArray
                         sortArray[j] = sortArray[j + 1];
@@ -269,8 +267,20 @@ public class bokningssystem {
         return ledigaPlatser;
     }
 
-    private static void vinsten() throws InterruptedException { // Metod för att visa vinsten
-        laddar();
-        System.out.println("Vinsten är: " + vinst + " kr"); // skriv ut vinsten
+    private static double vinsten(int index) {
+        // Basfall för rekursionen
+        if (index >= antal_platser) {
+            return 0;
+        }
+        
+        if (bokadePlatser[index] == 1) { // Kontrollera om platsen är bokad
+            if (biljettyp[index].equals("1")) { // Kontrollera biljetttyp och lägg till priset till vinsten
+                return prisV + vinsten(index + 1);
+            } else { // Annars, lägg till barnbiljettpriset
+                return prisB + vinsten(index + 1);
+            }
+        } else {
+            return vinsten(index + 1); // Om platsen inte är bokad, gå bara vidare
+        }
     }
 }
