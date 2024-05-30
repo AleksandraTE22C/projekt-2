@@ -1,4 +1,3 @@
-import java.util.EmptyStackException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -23,7 +22,7 @@ public class bokningssystem {
             System.out.println("5. Avboka");
             System.out.println("6. Skriv ut bokningar");
             System.out.println("7. Avsluta");
-            try{
+            try {
                 int val = tb.nextInt();
                 if (val == 1) {
                     bokaPlats();
